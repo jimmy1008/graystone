@@ -1,0 +1,33 @@
+# 灰石村地點表
+# danger: 0 安全 / 1 低 / 2 中（受傷事件可能） / 3 高（塌方等）
+# adjacency 決定：誰會遇到誰（情報傳播）、事件波及範圍
+
+locations:
+  # ── 村內公共 ──
+  - {id: square,   name: 中央水井/廣場, type: 公共, danger: 0, adjacency: [granary_loc, shrine, smithy_loc, tavern_loc, store_loc, house_01], notes: "白天人流交會點，情報傳播節點之一"}
+  - {id: granary_loc, name: 公共糧倉, type: 公共, danger: 0, adjacency: [square, house_01], notes: "村長代管；秋收後守衛重點"}
+  - {id: shrine,   name: 神龕, type: 公共, danger: 0, adjacency: [square], notes: "純敘事地點：婚喪節慶；無教士，村長主持儀式"}
+  - {id: smithy_loc, name: 鐵匠鋪, type: 營業, danger: 1, adjacency: [square, house_02], notes: "火爐；工具製作/修理"}
+  - {id: tavern_loc, name: 酒館, type: 營業, danger: 0, adjacency: [square, house_03], notes: "傍晚社交主場，情報傳播最強節點"}
+  - {id: store_loc,  name: 雜貨店, type: 營業, danger: 0, adjacency: [square, house_04], notes: "外來品唯一常設來源"}
+  # ── 民居（12 戶）──
+  - {id: house_01, name: 村長屋, type: 民居, danger: 0, adjacency: [square, granary_loc]}
+  - {id: house_02, name: 鐵匠家, type: 民居, danger: 0, adjacency: [smithy_loc]}
+  - {id: house_03, name: 酒館樓上, type: 民居, danger: 0, adjacency: [tavern_loc]}
+  - {id: house_04, name: 雜貨店後屋, type: 民居, danger: 0, adjacency: [store_loc]}
+  - {id: house_05, name: 岡特家, type: 民居, danger: 0, adjacency: [square, fields_a]}
+  - {id: house_06, name: 貝爾家, type: 民居, danger: 0, adjacency: [square, fields_a]}
+  - {id: house_07, name: 約爾家, type: 民居, danger: 0, adjacency: [square, fields_b]}
+  - {id: house_08, name: 哈維家, type: 民居, danger: 0, adjacency: [square, fields_b]}
+  - {id: house_09, name: 獵戶屋, type: 民居, danger: 0, adjacency: [forest], notes: "村緣，靠森林"}
+  - {id: house_10, name: 礦工家, type: 民居, danger: 0, adjacency: [square, mine]}
+  - {id: house_11, name: 守衛舍, type: 民居, danger: 0, adjacency: [square, road]}
+  - {id: house_12, name: 草藥師小屋, type: 民居, danger: 0, adjacency: [square, forest], notes: "村緣；採藥方便"}
+  # ── 村外生產地 ──
+  - {id: fields_a, name: 農田·溪東, type: 農田, danger: 0, adjacency: [square, fields_b], capacity: {收割者: 5}, notes: "3 塊田之一"}
+  - {id: fields_b, name: 農田·溪西, type: 農田, danger: 0, adjacency: [square, fields_a, fields_c], capacity: {收割者: 5}}
+  - {id: fields_c, name: 農田·谷口, type: 農田, danger: 0, adjacency: [fields_b, road], capacity: {收割者: 5}}
+  - {id: forest,   name: 獵場森林, type: 野外, danger: 2, adjacency: [house_09, house_12, logging], notes: "狩獵；狼群事件源"}
+  - {id: logging,  name: 伐木林, type: 野外, danger: 1, adjacency: [forest, square]}
+  - {id: mine,     name: 小鐵礦坑, type: 野外, danger: 3, adjacency: [house_10], notes: "塌方事件源"}
+  - {id: road,     name: 對外道路, type: 通路, danger: 1, adjacency: [square, house_11, fields_c], notes: "商隊入口；南通磐石鎮（三天路程，村外世界不模擬）"}

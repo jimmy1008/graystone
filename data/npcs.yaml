@@ -1,0 +1,48 @@
+# 灰石村 30 人名冊
+# money = 個人零用（戶內加總 = households.yaml 的戶額）
+# 技能 1-5；性格標籤池見 docs/06；體力/健康/心情 開局一律 100/100/50
+# 人口對帳：完整勞動 25、半勞動（少年）3（npc_02_3, npc_03_3, npc_06_3）、非勞動（老人）2（npc_05_3, npc_08_3）
+
+npcs:
+  # ── 戶1 村長家 ──
+  - {id: npc_01_1, name: 艾德里克, sex: 男, age: 58, household: h01, job_main: 村長, job_side: 農, skills: {行政: 3, 農耕: 2}, traits: [守舊, 溫和], money: 200}
+  - {id: npc_01_2, name: 蘿拉, sex: 女, age: 54, household: h01, job_main: 農, skills: {農耕: 3}, traits: [勤勞, 溫和], money: 30}
+  - {id: npc_01_3, name: 布蘭, sex: 男, age: 26, household: h01, job_main: 農, job_side: 民兵, skills: {農耕: 3, 戰鬥: 2}, traits: [勤勞, 暴躁], money: 20}
+  # ── 戶2 鐵匠家 ──
+  - {id: npc_02_1, name: 漢克, sex: 男, age: 51, household: h02, job_main: 鐵匠, job_side: 農, skills: {鍛造: 4, 農耕: 2}, traits: [孤僻, 勤勞], money: 250}
+  - {id: npc_02_2, name: 瑪莎, sex: 女, age: 48, household: h02, job_main: 農, skills: {農耕: 3}, traits: [慷慨, 溫和], money: 40}
+  - {id: npc_02_3, name: 托比, sex: 男, age: 16, household: h02, job_main: 鍛造學徒, labor: 半, skills: {鍛造: 1}, traits: [勤勞, 溫和], money: 10}
+  # ── 戶3 酒館 ──
+  - {id: npc_03_1, name: 老莫, sex: 男, age: 45, household: h03, job_main: 酒館老闆, skills: {經營: 3, 釀造: 3}, traits: [好酒, 慷慨], money: 200}
+  - {id: npc_03_2, name: 珍娜, sex: 女, age: 43, household: h03, job_main: 酒館, skills: {經營: 3}, traits: [溫和, 勤勞], money: 40}
+  - {id: npc_03_3, name: 莉茲, sex: 女, age: 15, household: h03, job_main: 酒館幫工, labor: 半, skills: {經營: 1}, traits: [勤勞, 溫和], money: 10}
+  # ── 戶4 雜貨商 ──
+  - {id: npc_04_1, name: 賽勒斯, sex: 男, age: 39, household: h04, job_main: 商人, skills: {經營: 4}, traits: [貪心, 吝嗇], money: 430}
+  - {id: npc_04_2, name: 薇拉, sex: 女, age: 36, household: h04, job_main: 商人, skills: {經營: 2}, traits: [溫和, 勤勞], money: 70}
+  # ── 戶5 岡特農戶 ──
+  - {id: npc_05_1, name: 岡特, sex: 男, age: 42, household: h05, job_main: 農, skills: {農耕: 4}, traits: [勤勞, 守舊], money: 130}
+  - {id: npc_05_2, name: 海蒂, sex: 女, age: 40, household: h05, job_main: 農, skills: {農耕: 3}, traits: [勤勞, 慷慨], money: 30}
+  - {id: npc_05_3, name: 老古, sex: 男, age: 68, household: h05, labor: 無, skills: {農耕: 5}, traits: [守舊, 好酒], money: 10}
+  # ── 戶6 貝爾農戶 ──
+  - {id: npc_06_1, name: 貝爾, sex: 男, age: 38, household: h06, job_main: 農, skills: {農耕: 3}, traits: [懶散, 好酒], money: 130}
+  - {id: npc_06_2, name: 安娜, sex: 女, age: 35, household: h06, job_main: 農, skills: {農耕: 3}, traits: [勤勞, 溫和], money: 30}
+  - {id: npc_06_3, name: 皮普, sex: 男, age: 14, household: h06, job_main: 農, labor: 半, skills: {農耕: 1}, traits: [懶散, 溫和], money: 10}
+  # ── 戶7 約爾農戶 ──
+  - {id: npc_07_1, name: 約爾, sex: 男, age: 31, household: h07, job_main: 農, skills: {農耕: 2}, traits: [勤勞, 暴躁], money: 120}
+  - {id: npc_07_2, name: 米拉, sex: 女, age: 29, household: h07, job_main: 農, skills: {農耕: 2}, traits: [溫和, 吝嗇], money: 50}
+  # ── 戶8 哈維農戶 ──
+  - {id: npc_08_1, name: 哈維, sex: 男, age: 45, household: h08, job_main: 農, skills: {農耕: 4}, traits: [守舊, 吝嗇], money: 130}
+  - {id: npc_08_2, name: 朵拉, sex: 女, age: 44, household: h08, job_main: 農, skills: {農耕: 3}, traits: [勤勞, 溫和], money: 30}
+  - {id: npc_08_3, name: 艾嬸, sex: 女, age: 70, household: h08, labor: 無, traits: [慷慨, 溫和], money: 10}
+  # ── 戶9 獵戶 ──
+  - {id: npc_09_1, name: 葛雷, sex: 男, age: 47, household: h09, job_main: 獵人, skills: {狩獵: 5}, traits: [孤僻, 暴躁], money: 130}
+  - {id: npc_09_2, name: 芬恩, sex: 男, age: 22, household: h09, job_main: 獵人, skills: {狩獵: 3}, traits: [勤勞, 溫和], money: 40}
+  # ── 戶10 礦工家 ──
+  - {id: npc_10_1, name: 杜蘭, sex: 男, age: 33, household: h10, job_main: 礦工, skills: {採礦: 4}, traits: [勤勞, 吝嗇], money: 100}
+  - {id: npc_10_2, name: 德魯, sex: 男, age: 29, household: h10, job_main: 礦工, skills: {採礦: 3}, traits: [好酒, 懶散], money: 70}
+  - {id: npc_10_3, name: 席雅, sex: 女, age: 27, household: h10, job_main: 農, skills: {農耕: 2}, traits: [勤勞, 溫和], money: 30, notes: "德魯之妻"}
+  # ── 戶11 守衛舍 ──
+  - {id: npc_11_1, name: 羅根, sex: 男, age: 35, household: h11, job_main: 守衛隊長, skills: {戰鬥: 4}, traits: [溫和, 勤勞], money: 120, notes: "村庫受薪"}
+  - {id: npc_11_2, name: 卡爾, sex: 男, age: 28, household: h11, job_main: 守衛, skills: {戰鬥: 2}, traits: [好酒, 暴躁], money: 70}
+  # ── 戶12 草藥師 ──
+  - {id: npc_12_1, name: 梅姑, sex: 女, age: 60, household: h12, job_main: 草藥師, skills: {醫療: 5, 採藥: 4}, traits: [孤僻, 慷慨], money: 160, notes: "仍在執業（不算非勞動）"}

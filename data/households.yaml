@@ -1,0 +1,113 @@
+# 灰石村 12 戶（財產單位：金錢/糧食/柴火/工具掛在戶下）
+# 金錢加總 = 2,700G（+村庫 300 = 全村 3,000，見 docs/05）
+# 開局穀物 = 每人 150 份 × 戶內人數（全戶合計 4,500，另公共糧倉 2,100）
+# 依據：春季開局距秋收 255 天，全村日耗 ~26 份（含釀酒/損耗），需 ~6,600 份
+
+households:
+  - id: h01
+    name: 村長家
+    members: [npc_01_1, npc_01_2, npc_01_3]
+    head: npc_01_1
+    money: 250
+    residence: house_01
+    stocks: {穀物: 450, 木柴: 10}
+  - id: h02
+    name: 鐵匠家
+    members: [npc_02_1, npc_02_2, npc_02_3]
+    head: npc_02_1
+    money: 300
+    residence: house_02   # 兼鐵匠鋪後屋
+    stocks: {穀物: 450, 木柴: 10}
+  - id: h03
+    name: 酒館
+    members: [npc_03_1, npc_03_2, npc_03_3]
+    head: npc_03_1
+    money: 250
+    residence: house_03   # 酒館樓上
+    stocks: {穀物: 450, 木柴: 10, 麥酒: 40}
+  - id: h04
+    name: 雜貨商
+    members: [npc_04_1, npc_04_2]
+    head: npc_04_1
+    money: 500
+    residence: house_04   # 雜貨店後屋
+    stocks: {穀物: 300, 木柴: 10, 鹽: 20, 布: 15}
+  - id: h05
+    name: 岡特農戶
+    members: [npc_05_1, npc_05_2, npc_05_3]
+    head: npc_05_1
+    money: 170
+    residence: house_05
+    stocks: {穀物: 450, 木柴: 10}
+  - id: h06
+    name: 貝爾農戶
+    members: [npc_06_1, npc_06_2, npc_06_3]
+    head: npc_06_1
+    money: 170
+    residence: house_06
+    stocks: {穀物: 450, 木柴: 10}
+  - id: h07
+    name: 約爾農戶
+    members: [npc_07_1, npc_07_2]
+    head: npc_07_1
+    money: 170
+    residence: house_07
+    stocks: {穀物: 300, 木柴: 10}
+  - id: h08
+    name: 哈維農戶
+    members: [npc_08_1, npc_08_2, npc_08_3]
+    head: npc_08_1
+    money: 170
+    residence: house_08
+    stocks: {穀物: 450, 木柴: 10}
+  - id: h09
+    name: 獵戶
+    members: [npc_09_1, npc_09_2]
+    head: npc_09_1
+    money: 170
+    residence: house_09
+    stocks: {穀物: 300, 木柴: 10, 鹽漬肉: 20, 鹽: 2}
+  - id: h10
+    name: 礦工家
+    members: [npc_10_1, npc_10_2, npc_10_3]
+    head: npc_10_1
+    money: 200
+    residence: house_10
+    stocks: {穀物: 450, 木柴: 10}
+  - id: h11
+    name: 守衛舍
+    members: [npc_11_1, npc_11_2]
+    head: npc_11_1
+    money: 190
+    residence: house_11
+    stocks: {穀物: 300, 木柴: 10}
+  - id: h12
+    name: 草藥師
+    members: [npc_12_1]
+    head: npc_12_1
+    money: 160
+    residence: house_12
+    stocks: {穀物: 150, 木柴: 10, 藥草: 10}
+
+# 機構（非戶，公共/營業資產）
+institutions:
+  - id: treasury
+    name: 村庫
+    managed_by: npc_01_1
+    money: 300
+  - id: granary
+    name: 公共糧倉
+    managed_by: npc_01_1
+    stocks: {穀物: 2100, 種糧: 110}
+  - id: smithy
+    name: 鐵匠鋪
+    owned_by: h02
+    stocks: {鐵礦: 40, 木柴: 30}
+  - id: tavern_biz
+    name: 酒館營業
+    owned_by: h03
+    stocks: {}   # 營業庫存併入 h03
+  - id: store
+    name: 雜貨店
+    owned_by: h04
+    stocks: {}   # 營業庫存併入 h04

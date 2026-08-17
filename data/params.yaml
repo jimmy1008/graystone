@@ -1,0 +1,153 @@
+# ══════════════════════════════════════════════════════════════
+# 灰石村 全域參數正本（docs/09 原則：引擎程式碼零魔法數字）
+# 分兩層：world_laws = 不可變世界法則；其餘全部 = 可調參數
+# 標 [P2] 者 = Phase 2 允許被世界內決策（村長等）修改的參數
+# ══════════════════════════════════════════════════════════════
+
+world_laws:                    # ―― 不可變。任何 Agent/事件不得修改 ――
+  equipment_tiers: 見 items.yaml equipment_tiers
+  conservation:
+    money: "村內總額 = 開局總額 + Σ商隊淨流入（每30天審計）"
+    resources: "變動僅限 生產/消耗/加工/交易/事件損失"
+  registry: "人物只能經 出生/遷入(CreateCharacter) 進入世界；LLM 不可寫 FACT"
+  concurrent_events_cap: 3     # 同時進行的世界事件上限（防雪崩安全閥）
+
+time:
+  days_per_year: 360
+  seasons: [春, 夏, 秋, 冬]     # 各 90 天
+  sowing_day: 10
+  harvest_window: [241, 255]
+  tax_day: 256
+  winter_start: 271
+  caravan_interval: 30
+
+weather:                       # 馬可夫鏈：60% 沿續昨日，否則按當季分布抽
+  persistence: 0.6
+  distributions:               # 晴/陰/雨/雪/暴風
+    春: {晴: 0.40, 陰: 0.25, 雨: 0.30, 雪: 0.00, 暴風: 0.05}
+    夏: {晴: 0.55, 陰: 0.20, 雨: 0.20, 雪: 0.00, 暴風: 0.05}
+    秋: {晴: 0.45, 陰: 0.30, 雨: 0.20, 雪: 0.00, 暴風: 0.05}
+    冬: {晴: 0.30, 陰: 0.25, 雨: 0.05, 雪: 0.30, 暴風: 0.10}
+  temp_bands: {春: 涼, 夏: 暖, 秋: 涼, 冬: 寒}   # 基準；每日 ±1 帶隨機漂移(0.2)
+  growth_points: {晴: 2, 雨: 1, 陰: 1, 寒日: -1, 暴風: -3}   # 生長積分
+  harvest_coef_range: [0.5, 1.3]      # 收成係數 = f(積分達成率) 映射範圍
+  caravan_delay_per_storm_day: 3      # 抵達前5日路況，每暴風/大雪日+3天
+  cold_snap_firewood_mult: 1.5
+  outdoor_stop: [暴風, 酷寒]           # 戶外停工天氣
+  rain_efficiency: 0.8
+
+production:
+  farming:
+    harvest_yield_full: 45      # 全職農民收成期日產
+    harvest_yield_helper: 22
+    seed_per_field: 30
+    field_harvester_cap: 5
+    care_manday_per_10d: 5      # 夏季照料需求
+    care_shortfall_penalty: 0.04
+  hunting:  {meat: 3, pelt: 0.5, injury_risk: 0.05, injury_risk_wolf: 0.15, winter_mult: 0.5, autumn_mult: 1.1}
+  mining:
+    ore: 3                        # 淺層低品位（技術限制，docs/03）
+    collapse_risk: 0.02
+    winter_mult: 0.8
+    rare_find_daily: 0.005        # 珍稀發現/人日
+    rare_find_table: {銀礦石: 0.60, 寶石原石: 0.25, 古物: 0.15}
+    rare_values: {銀礦石: 25, 寶石原石: [40, 60], 古物: [30, 100]}
+  logging:  {wood: 5, busy_season_mult: 0.5}
+  smithing: 見 items.yaml tool_types
+  brewing:  {grain_in: 10, ale_out: 8, ferment_days: 3, batch_cap: 30}
+  herbalism: {herb_per_day: 2, heal_speed_mult: 2, fee: 2}
+  skill_coef: "0.7 + level*0.1"
+  tool_bonus: 1.25
+  half_labor_mult: 0.5
+
+needs:
+  food_per_day: {成人: 1.0, 少年: 0.8, 老人: 0.7, 嬰幼: 0.5}
+  meat_food_value: 1.5
+  firewood_per_household_winter: 2
+  cloth_per_person_year: 1
+  hunger:  {half_ration_stamina: -15, streak2_maxstamina: -10, streak7_health: -5}
+  health_thresholds: {no_work: 30, death: 0}
+  stamina: {work_cost: 20, danger_work_cost: 25, recover_fed: 25, recover_hungry: 10, mood_bonus: 5}
+  mood: {base: 50, tavern: 10, meat_meal: 2, missed_meal: -10, family_hurt: -15, depressed_threshold: 20, depressed_days: 14, depressed_output: 0.7}
+
+economy:
+  initial_money_total: 3000        # 開局值；此後由商隊閥門動態決定（docs/09.D）
+  price_clamp: [0.5, 3.0]
+  price_stickiness: 0.15         # 世界規則：商人每週調價上限 ±15%（劇變以連續數週呈現，不跳崖）
+  price_anchor_window_days: 90     # 滾動錨：近90日成交均價
+  reprice_interval_days: 7
+  guard_wage: 20                   # [P2] 村長可調
+  tax_rate: 0.05                   # [P2]
+  caravan_buy_caps: {鐵礦: 100, 皮毛: 30, 工具: 5, 銀礦石: -1}   # [P2] 防通膨閥門；銀礦石無上限（商隊搶收）
+  grain_import: {price_mult: 2.0, per_visit_cap: 600, trigger_days: 45}   # 飢荒進口閥門：村糧<45天量→村庫向商隊高價買糧（貨幣回流外界）
+  merchant_margin: [0.10, 0.15]
+  barter_allowed: true
+  debt: {min_rel: 30, repay_days: 30, interest: 0.10, overdue_rel_penalty_per_30d: -1}
+  gini_warning: 0.6
+
+population:
+  mortality_annual: {成年基準: 0.003, 55歲: 0.008, 60歲: 0.02, 70歲: 0.06, 80歲: 0.15}   # 線性內插；健康/營養年均修正 ±50%
+  marriage: {age: [18, 40], min_rel: 40, annual_prob: 0.5}
+  fertility: {wife_age: [18, 42], annual_prob: 0.25, pregnancy_days: 270, food_security_mod: 0.5}
+  child_growth: {half_labor_age: 14, full_labor_age: 16}
+  emigration: {age: [18, 35], mood_below: 30, mood_days: 90, annual_prob: 0.3}
+  immigration: {prosperity_threshold: 0.7, prosperity_days: 180, annual_prob: 0.4, templates: [流浪者, 工匠, 逃難者]}
+  trait_inheritance_weight: 0.3
+  trait_drift: {widowed_reclusive: 0.4, windfall_shift: 0.3, poverty_stingy: 0.3}   # 一生 0~3 次的低頻漂移
+  rel_decay: {per_90d_no_interaction: 1, canon_anchored: false}   # canon 錨定的關係不衰減
+
+development:
+  field: {fertility_init: 1.0, fertility_range: [0.6, 1.3], deplete_per_year: 0.05, fallow_recover: 0.10, new_field_fertility: 0.7}
+  new_field_cost: {surplus_years: 2, winter_mandays: 200, treasury: 50}
+  mine:
+    shallow_reserve: 9000         # 技術可及（~5 年見底=設計好的結構性危機）
+    deep_reserve: 30000           # 世界 FACT 存在，本村技術不可及（遠期解鎖鉤子）
+    depletion_step: 1000
+    depletion_mult: 0.95          # 淺層越挖越貧
+    new_outcrop_annual_prob: 0.05 # 新露頭（只延緩不逆轉）
+    prospecting_bonus: 0.05
+  house_cost: {木柴: 200, mandays: 100, gold: 30}
+  granary_capacity: 2500
+  overflow_spoilage_mult: 2.0
+  skill_up_workdays: 300
+  aptitude_distribution: [0.1, 0.2, 0.4, 0.2, 0.1]   # 天資 1~5
+  apprentice_speed_mult: 2
+
+events:                          # 殘餘隨機性（docs/09 清單；天氣湧現類已移除）
+  wolf: {base_daily: 0.008, winter_harshness_mult: "1 + 酷寒日累計/30", duration: [7, 14]}
+  plague: {base_daily_spring: 0.005, wet_spring_mult: "1 + 雨日累計/45", victims: [3, 6], sick_days: [10, 20]}
+  bandit_rumor: {base_daily: 0.005, caravan_delay_mult: 3, duration: 7}
+  # 塌方/狩獵受傷 併入 production 的 risk 參數
+
+llm:                             # 全員 LLM 架構（docs/06；每個 NPC 都有 Agent 腦）
+  model: qwen3:8b
+  base_url: http://localhost:11434
+  max_decisions_per_day: 6       # 抉擇點呼叫預算/模擬日（排程問題，非階級問題）
+  max_social_per_day: 3          # 酒館社交生成預算/模擬日
+  temperature: 0.7
+  timeout_s: 120
+  num_ctx: 4096
+
+serendipity:                     # 機緣系統（docs/10；純規則版休眠，M4 啟用）
+  pool_initial: 0                # 零預埋劇本：機緣池開局為空
+  proposal_interval_days: 90     # LLM 埋設者的背景提案節奏（僅限中性事實，禁附劇情走向）
+  pool_cap: 5                    # 同時存在的未發現機緣上限
+  plant_cooldown_days: 90        # 因先於果：埋設後至少 90 天才可觸發
+  forbid_beneficiary_at_plant: true   # 埋設時禁止指定受益人（先畫靶鐵律）
+  trigger_base_daily: 0.002      # 人/地/活動吻合時的日觸發率
+  yearly_trigger_budget: 2       # 年度顯現預算（內容預算原則）
+  impact_radius_max: 戶          # 單一機緣直接影響半徑上限（村級改變只能靠長因果鏈）
+  literacy: [npc_01_1, npc_04_1, npc_12_1]   # 開局識字者：村長/商人/草藥師（漢克、托比半識字）——能力檢查用
+
+logging_thresholds:              # 事件落盤門檻（docs/07）
+  property_change_gold: 50
+  relationship_jump: 15
+  # 死亡/受傷/職業變動/世界資源事件 一律落盤
+
+warnings:                        # 控制台 ⚠️ 閾值
+  food_days: 30
+  firewood_days_winter: 14
+  price_high_days: 30
+  disabled_workers: 4
+  treasury_below_next_wage: true
+  any_death: true

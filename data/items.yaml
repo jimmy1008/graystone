@@ -1,0 +1,57 @@
+# 物品定義：散裝資源 + 裝備品級（世界法則）+ 個別物品 registry 種子
+# 規則細節見 docs/02
+
+bulk_resources:
+  穀物:   {unit: 份, base_price: 1, shelf_life_days: 720, food_value: 1.0}
+  種糧:   {unit: 份, base_price: 2, shelf_life_days: 360, food_value: 0}
+  肉:     {unit: 份, base_price: 3, shelf_life_days: 3,   food_value: 1.5}
+  鹽漬肉: {unit: 份, base_price: 4, shelf_life_days: 180, food_value: 1.5, recipe: {肉: 1, 鹽: 0.1}}
+  皮毛:   {unit: 張, base_price: 4, shelf_life_days: 360}
+  木柴:   {unit: 捆, base_price: 1, shelf_life_days: 720}
+  鐵礦:   {unit: 塊, base_price: 2, shelf_life_days: -1}
+  麥酒:   {unit: 杯, base_price: 2, shelf_life_days: 90, recipe: {穀物: 1.25}}  # 10穀→8酒
+  鹽:     {unit: 包, base_price: 5, shelf_life_days: -1, import_only: true}
+  布:     {unit: 匹, base_price: 8, shelf_life_days: -1, import_only: true}
+  藥草:   {unit: 束, base_price: 3, shelf_life_days: 180, notes: 草藥師採集自用為主}
+  銀礦石: {unit: 塊, base_price: 25, shelf_life_days: -1, notes: 採礦珍稀發現物（0.5%/人日，docs/03）；商隊搶收無上限}
+  # 寶石原石/古物 = 個別物品：發現時由引擎建 ID 入 item_registry（來源=挖掘事件，必落盤）
+  #   寶石原石 40~60G；古物 30~100G——古物是中性物件，本身不附帶劇情；
+  #   它引出什麼（誰想要、誰起疑、賣不賣）完全由人物行為湧現（零預埋劇本原則）
+
+# ── 裝備品級（世界法則，不可被任何 Agent 修改）──
+equipment_tiers:
+  青銅: {world_cap: -1,    min_forge_level: 1, stat_cap: 5,   traits: [0, 1], village_craftable: true}
+  白銀: {world_cap: -1,    min_forge_level: 2, stat_cap: 10,  traits: [0, 2], village_craftable: true}   # 漢克 Lv.4 可製
+  黃金: {world_cap: 10000, min_forge_level: 4, stat_cap: 25,  traits: [1, 3], village_craftable: false}
+  鉑金: {world_cap: 1000,  min_forge_level: 6, stat_cap: 50,  traits: [2, 4], village_craftable: false}
+  傳說: {world_cap: 100,   min_forge_level: 8, stat_cap: 100, traits: [3, 5], village_craftable: false}
+  神話: {world_cap: 10,    min_forge_level: null, stat_cap: null, traits: null, village_craftable: false, notes: 特殊NPC限定}
+
+tool_types:
+  鋤具: {job: 農耕, bonus: 1.25, durability_workdays: 180, recipe: {鐵礦: 3, 木柴: 2}, craft_days: 2, base_price: 15}
+  獵弓: {job: 狩獵, bonus: 1.25, durability_workdays: 180, recipe: {鐵礦: 2, 木柴: 3}, craft_days: 2, base_price: 15}
+  鎬:   {job: 採礦, bonus: 1.25, durability_workdays: 180, recipe: {鐵礦: 3, 木柴: 2}, craft_days: 2, base_price: 15}
+  # 修理：任一工具 1 鐵礦 + 1 天 → 耐久回復至 60%
+
+# ── 個別物品 registry 開局種子（唯一 ID，任何新增必經製作或商隊）──
+item_registry:
+  # 武器
+  - {id: WPN-001, name: 白銀長劍, tier: 白銀, stat: {攻: 9}, traits: [不鏽], owner: npc_02_1, notes: "鐵匠舊藏（村中唯一白銀級物品；它的故事——如果有的話——由模擬自己長出來）"}
+  - {id: WPN-002, name: 獵弓·灰羽, tier: 青銅, stat: {攻: 4}, owner: npc_09_1, doubles_as_tool: 獵弓, durability: 120}
+  - {id: WPN-003, name: 長矛, tier: 青銅, stat: {攻: 4}, owner: npc_11_1, property_of: treasury}
+  - {id: WPN-004, name: 長矛, tier: 青銅, stat: {攻: 3}, owner: npc_11_2, property_of: treasury}
+  - {id: WPN-005, name: 獵弓, tier: 青銅, stat: {攻: 3}, owner: npc_09_2, doubles_as_tool: 獵弓, durability: 160}
+  # 工具（13 件，耐久=剩餘工作日，開局故意參差以錯開更換週期）
+  - {id: TL-001, type: 鋤具, owner: h01, durability: 150}
+  - {id: TL-002, type: 鋤具, owner: h01, durability: 80}
+  - {id: TL-003, type: 鋤具, owner: h02, durability: 120}
+  - {id: TL-004, type: 鋤具, owner: h05, durability: 170}
+  - {id: TL-005, type: 鋤具, owner: h05, durability: 60}
+  - {id: TL-006, type: 鋤具, owner: h06, durability: 140}
+  - {id: TL-007, type: 鋤具, owner: h06, durability: 90}
+  - {id: TL-008, type: 鋤具, owner: h07, durability: 110}
+  - {id: TL-009, type: 鋤具, owner: h07, durability: 40}
+  - {id: TL-010, type: 鋤具, owner: h08, durability: 160}
+  - {id: TL-011, type: 鋤具, owner: h08, durability: 100}
+  - {id: TL-012, type: 鎬,   owner: h10, durability: 130}
+  - {id: TL-013, type: 鎬,   owner: h10, durability: 70}

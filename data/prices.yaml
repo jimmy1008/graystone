@@ -1,0 +1,34 @@
+# 基準物價（動態調價公式見 docs/05：當前價 = 基準價 × clamp(需求/供給, 0.5, 3.0)）
+base_prices:
+  穀物: 1
+  種糧: 2
+  肉: 3
+  鹽漬肉: 4
+  皮毛: 4
+  木柴: 1
+  鐵礦: 2
+  麥酒: 2
+  鹽: 5
+  布: 8
+  藥草: 3
+  工具: 15
+  工具修理: 3   # 工錢；料錢另收 1 鐵礦
+  診療: 2
+
+# 商隊（每 30 天；冬季 30% 延誤）
+caravan:
+  buys:   # 商隊收購（金幣流入村莊），單次收購上限=防通膨閥門（M2 重點調參）
+    皮毛: {price_mode: 市價±10%, per_visit_cap: 30}
+    鐵礦: {price_mode: 市價±10%, per_visit_cap: 150}
+    工具: {price: 12, per_visit_cap: 5}
+  sells:  # 商隊出售（金幣流出村莊），固定價
+    鹽: 5
+    布: 8
+    種糧: 2
+    白銀鍛材: 20   # 鐵匠製白銀武器的特殊材料（docs/03）
+  main_counterpart: h04   # 主要對口=雜貨商（賺 10~15% 價差）；各戶亦可直接交易
+
+# 固定金流
+fixed_flows:
+  守衛薪資: {amount: 20, per: 人, interval_days: 30, from: treasury, to: h11}
+  收成稅: {rate: 0.05, day: 256, in_kind: 穀物, from: 各戶, to: treasury}
